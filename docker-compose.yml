@@ -27,4 +27,3 @@ secrets:
     file: secrets/postgres_user
   postgres_password:
     file: secrets/postgres_password
-
