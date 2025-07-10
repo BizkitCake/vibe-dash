@@ -52,11 +52,11 @@ vibe-dash/
 ### Task 2.2: Database Connection
 **Start**: Express server exists
 **End**: PostgreSQL connection established
-- [ ] Install PostgreSQL client (`pg`) and types (`@types/pg`)
-- [ ] Create database connection module
-- [ ] Implement connection pooling
-- [ ] Add database health check endpoint
-- [ ] Create `backend/src/db/init.ts` script to create `chart_configs` table.
+- [x] Install PostgreSQL client (`pg`) and types (`@types/pg`)
+- [x] Create database connection module
+- [x] Implement connection pooling
+- [x] Add database health check endpoint
+- [x] Create `backend/src/db/init.ts` script to create `chart_configs` table.
 **Info**: DB host - db_vibe:5432; User - mneza
 
 ### Task 2.3: API Routes Structure

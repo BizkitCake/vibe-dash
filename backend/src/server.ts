@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import Database from './db/connection';
 
 // Load environment variables
 dotenv.config();
@@ -26,6 +27,37 @@ app.get('/health', (req: Request, res: Response) => {
     uptime: process.uptime(),
     service: 'vibe-dash-backend'
   });
+});
+
+// Database health check endpoint
+app.get('/health/db', async (req: Request, res: Response) => {
+  try {
+    const isConnected = await Database.testConnection();
+    const poolStats = Database.getPoolStats();
+    
+    if (isConnected) {
+      res.status(200).json({
+        status: 'OK',
+        database: 'connected',
+        timestamp: new Date().toISOString(),
+        pool: poolStats
+      });
+    } else {
+      res.status(503).json({
+        status: 'ERROR',
+        database: 'disconnected',
+        timestamp: new Date().toISOString(),
+        pool: poolStats
+      });
+    }
+  } catch (error) {
+    res.status(503).json({
+      status: 'ERROR',
+      database: 'error',
+      error: error instanceof Error ? error.message : 'Unknown database error',
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Basic API route
