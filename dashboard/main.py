@@ -4,11 +4,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import json
 import random
+import os
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
 import uvicorn
 
 app = FastAPI(title="Dashboard", description="A beautiful dashboard with example graphs")
+
+# Create static directory if it doesn't exist
+if not os.path.exists("static"):
+    os.makedirs("static")
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -101,6 +106,11 @@ async def get_dashboard_stats():
         "conversion_rate": round(random.uniform(2.1, 4.8), 1),
         "active_sessions": random.randint(50, 200)
     }
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "message": "Dashboard is running!"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

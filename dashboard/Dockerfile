@@ -14,6 +14,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
+# Ensure required directories exist
+RUN mkdir -p static templates
+
 # Expose port
 EXPOSE 8000
 

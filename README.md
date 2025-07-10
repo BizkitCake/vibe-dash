@@ -96,4 +96,32 @@ The dashboard is fully responsive and includes:
 - Optimized mobile navigation
 - Scalable chart visualizations
 
+## Troubleshooting
+
+### Common Issues
+
+1. **Static directory error**: Fixed! The application now automatically creates the static directory if it doesn't exist.
+
+2. **Port already in use**: If port 8000 is busy, change it in docker-compose.yml:
+   ```yaml
+   ports:
+     - "8001:8000"  # Use port 8001 instead
+   ```
+
+3. **Container won't start**: Check logs with:
+   ```bash
+   docker-compose logs dashboard
+   ```
+
+4. **Health check failing**: Test the health endpoint:
+   ```bash
+   curl http://localhost:8000/health
+   ```
+
+### Testing
+
+- **Health Check**: `GET /health`
+- **API Test**: `GET /api/stats`
+- **Dashboard**: Open `http://localhost:8000` in browser
+
 Enjoy your beautiful, fast dashboard! 🎉
