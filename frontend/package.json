@@ -1,0 +1,29 @@
+{
+  "name": "vibe-dash-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-apexcharts": "^1.7.0",
+    "apexcharts": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.23",
+    "@types/react-dom": "^18.2.9",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.4",
+    "eslint": "^9.30.1",
+    "@typescript-eslint/parser": "^8.36.0",
+    "@typescript-eslint/eslint-plugin": "^8.36.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.0"
+  }
+} 
