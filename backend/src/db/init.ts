@@ -1,4 +1,9 @@
 import Database from './connection';
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Load .env from root directory (three levels up from backend/src/db)
+dotenv.config({ path: path.join(__dirname, '../../../.env') });
 
 /**
  * Database initialization script

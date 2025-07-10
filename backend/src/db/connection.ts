@@ -1,7 +1,9 @@
 import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';
 import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config();
+// Load .env from root directory (one level up from backend)
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 // Database configuration
 const dbConfig = {
