@@ -22,6 +22,21 @@ services:
       - postgres_password
       - postgres_user
 
+  dashboard:
+    build: ./dashboard
+    container_name: dashboard
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/stats"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
 secrets:
   postgres_user:
     file: secrets/postgres_user
