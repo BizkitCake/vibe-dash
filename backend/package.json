@@ -9,7 +9,8 @@
     "build": "tsc",
     "lint": "eslint .",
     "db:init": "ts-node src/db/init.ts",
-    "db:setup": "pnpm db:init"
+    "db:setup": "pnpm db:init",
+    "db:test": "ts-node src/test-connection.ts"
   },
   "dependencies": {
     "@types/cors": "^2.8.19",
