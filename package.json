@@ -2,14 +2,15 @@
   "name": "vibe-dash",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
   "workspaces": [
     "frontend",
     "backend"
   ],
   "scripts": {
     "dev": "concurrently \"pnpm --filter frontend dev\" \"pnpm --filter backend dev\"",
-    "build": "pnpm --filter frontend build && pnpm --filter backend build",
-    "lint": "pnpm recursive run lint",
+    "build": "pnpm --filter frontend build",
+    "lint": "pnpm -r run lint",
     "start": "pnpm --filter backend start",
     "validate:env": "node scripts/validate-env.js"
   },
