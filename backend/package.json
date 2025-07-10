@@ -4,13 +4,14 @@
   "version": "0.1.0",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "ts-node src/server.ts",
+    "dev": "pnpm exec ts-node src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
     "lint": "eslint .",
-    "db:init": "ts-node src/db/init.ts",
+    "db:init": "pnpm exec ts-node src/db/init.ts",
     "db:setup": "pnpm db:init",
-    "db:test": "ts-node src/test-connection.ts"
+    "db:test": "pnpm exec ts-node src/test-connection.ts",
+    "db:test-local": "./test-local-db.sh"
   },
   "dependencies": {
     "@types/cors": "^2.8.19",
