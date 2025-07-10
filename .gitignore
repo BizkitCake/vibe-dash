@@ -22,3 +22,6 @@ yarn-debug.log*
 .vite
 .cache
 
+# Local environment files
+.env.local
+!.env.example
