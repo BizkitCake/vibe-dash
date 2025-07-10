@@ -43,9 +43,9 @@ vibe-dash/
 
 ### Task 2.1: Express Server Setup
 **Start**: Backend directory exists
-**End**: Basic Express server running
-- [ ] Install Express.js and core dependencies
-- [ ] Create `backend/src/server.js` with basic Express setup
+**End**: Basic Express server running with TypeScript
+- [ ] Install Express.js and core dependencies (`typescript`, `ts-node`, `@types/node`, `@types/express`)
+- [ ] Create `backend/src/server.ts` with basic Express setup
 - [ ] Implement basic health check endpoint
 - [ ] Add CORS middleware
 - [ ] Add error handling middleware
@@ -53,29 +53,31 @@ vibe-dash/
 ### Task 2.2: Database Connection
 **Start**: Express server exists
 **End**: PostgreSQL connection established
-- [ ] Install PostgreSQL client (pg)
+- [ ] Install PostgreSQL client (`pg`) and types (`@types/pg`)
 - [ ] Create database connection module
 - [ ] Implement connection pooling
 - [ ] Add database health check endpoint
-- [ ] Create database initialization script
+- [ ] Create `backend/src/db/init.ts` script to create `chart_configs` table.
+**Info**: DB host - db_vibe:5432; User - mneza
 
 ### Task 2.3: API Routes Structure
 **Start**: Database connection working
-**End**: REST API endpoints defined
-- [ ] Create routes directory structure
-- [ ] Implement data polling endpoint
-- [ ] Implement chart configuration endpoint
-- [ ] Add request validation middleware
-- [ ] Implement manual refresh endpoint
+**End**: REST API endpoints defined for chart configurations
+- [ ] Create routes directory structure for `configs` and `data`
+- [ ] Implement CRUD endpoints for `/api/configs`
+- [ ] Add request validation middleware (e.g., using `joi` or `zod`)
+- [ ] Implement `GET /api/data-sources` endpoint.
+- [ ] Implement `GET /api/data/:dataSourceId` endpoint.
 
 ### Task 2.4: Data Polling Service
 **Start**: API routes exist
 **End**: Automatic data polling working
-- [ ] Create polling service module
-- [ ] Implement 1-hour interval polling
+- [ ] Create a data source mapping (from `dataSourceId` to SQL query) in the backend.
+- [ ] Create polling service module that iterates through data sources.
+- [ ] Implement 1-hour interval polling to refresh data for each source.
 - [ ] Add polling status endpoint
 - [ ] Implement error handling for polling failures
-- [ ] Add polling configuration options
+- [ ] Implement `POST /api/refresh/:dataSourceId` manual refresh endpoint.
 
 ## Phase 3: Frontend Development
 
@@ -90,12 +92,11 @@ vibe-dash/
 
 ### Task 3.2: ApexCharts Integration
 **Start**: React app running
-**End**: Charts library integrated
+**End**: Charts library integrated for displaying data
 - [ ] Install React ApexCharts
-- [ ] Create chart wrapper components
-- [ ] Implement chart configuration system
-- [ ] Add chart type definitions (line, bar, pie, heatmap)
-- [ ] Create chart editing interface
+- [ ] Create chart wrapper components (Line, Bar, Pie, Heatmap) that take configuration and data.
+- [ ] Implement a system to render a grid of charts based on configuration from the backend.
+- [ ] Add chart type definitions and interfaces in TypeScript.
 
 ### Task 3.3: Dashboard Layout
 **Start**: Charts integrated
@@ -119,21 +120,21 @@ vibe-dash/
 
 ### Task 4.1: Chart Configuration System
 **Start**: Basic charts displaying
-**End**: JSON-based chart configuration working
-- [ ] Create chart configuration schema
-- [ ] Implement configuration storage
-- [ ] Add configuration validation
-- [ ] Create configuration editor interface
-- [ ] Implement configuration persistence
+**End**: JSON-based chart configuration is fetched and managed from the frontend.
+- [ ] Create a state management solution (e.g., Zustand, Redux Toolkit) for chart configs.
+- [ ] Implement fetching all chart configs on dashboard load.
+- [ ] Add configuration validation on the frontend.
+- [ ] Implement persistence through API calls for any change.
 
 ### Task 4.2: Low-Code Editor Interface
 **Start**: Configuration system exists
 **End**: User-friendly chart editor complete
-- [ ] Create drag-and-drop chart builder
-- [ ] Implement chart type selector
-- [ ] Add data source configuration
-- [ ] Create chart property editor
-- [ ] Implement live preview functionality
+- [ ] Create a modal or side panel for chart editing.
+- [ ] Build a form to edit basic properties (title, chart type). The chart type selector should use `ApexCharts` types.
+- [ ] Implement a data source selector that fetches from `GET /api/data-sources`.
+- [ ] Create a simple UI to edit chart-specific `options` (e.g., colors, labels).
+- [ ] Implement "Save" and "Cancel" functionality that uses the API to persist changes.
+- [ ] Implement creating and deleting charts from the UI.
 
 ### Task 4.3: Edit Mode Toggle
 **Start**: Editor interface exists
