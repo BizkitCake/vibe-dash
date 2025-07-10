@@ -43,11 +43,11 @@ vibe-dash/
 ### Task 2.1: Express Server Setup
 **Start**: Backend directory exists
 **End**: Basic Express server running with TypeScript
-- [ ] Install Express.js and core dependencies (`typescript`, `ts-node`, `@types/node`, `@types/express`)
-- [ ] Create `backend/src/server.ts` with basic Express setup
-- [ ] Implement basic health check endpoint
-- [ ] Add CORS middleware
-- [ ] Add error handling middleware
+- [x] Install Express.js and core dependencies (`typescript`, `ts-node`, `@types/node`, `@types/express`)
+- [x] Create `backend/src/server.ts` with basic Express setup
+- [x] Implement basic health check endpoint
+- [x] Add CORS middleware
+- [x] Add error handling middleware
 
 ### Task 2.2: Database Connection
 **Start**: Express server exists
