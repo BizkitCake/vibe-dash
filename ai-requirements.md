@@ -26,6 +26,7 @@ Building a modern, personal dashboard application with editable graphs and real-
 - **JSON Configuration**: Chart configs stored as JSON
 - **Manager-Friendly**: Clear documentation and simple setup
 - **Single Command Deployment**: `docker compose up -d --build`
+- **Prohibited to update DB config**: Current db config and compose files content related to db must persist.
 
 ## Current Status
 
@@ -84,15 +85,106 @@ VITE_API_URL=http://localhost:3001
 ENABLE_EDIT=true
 ```
 
+## Database Schema
+### Table "public.food_consumption"
+Table stores log of cat's food consumption
+
+Column|Type|Collation|Nullable|Default|Storage|Compression|Stats target|Description
+id|integer||not null|nextval('food_consumption_id_seq'::regclass)|plain|||
+date|date||not null||plain|||
+product_id|integer||||plain|||
+notes|text||||extended|||
+portion_size|real||||plain|||
+leftovers|real||||plain|||
+consumption|real|||generated always as (portion_size - leftovers) stored|plain|||
+dishware_id|integer||||plain|||
+Check constraints:
+    "food_consumption_leftovers_check" CHECK (leftovers >= 0::double precision)
+    "food_consumption_portion_size_check" CHECK (portion_size >= 0::double precision)
+Foreign-key constraints:
+    "food_consumption_dishware_id_fkey" FOREIGN KEY (dishware_id) REFERENCES dishware(id) ON DELETE SET NULL
+    "food_consumption_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+
+### Table "public.water_consumption"
+Table stores log of cat's water consumption
+
+Column|Type|Collation|Nullable|Default|Storage|Compression|Stats target|Description
+id|integer||not null|nextval('water_consumption_id_seq'::regclass)|plain|||
+date|date||not null||plain|||
+dishware_id|integer||||plain|||
+notes|text||||extended|||
+portion_size|real||||plain|||
+residue|real||||plain|||
+vaporized|real||||plain|||
+consumption|real||||plain|||
+Check constraints:
+    "water_consumption_consumption_check" CHECK (consumption >= 0::double precision)
+    "water_consumption_portion_size_check" CHECK (portion_size >= 0::double precision)
+    "water_consumption_residue_check" CHECK (residue >= 0::double precision)
+    "water_consumption_vaporized_check" CHECK (vaporized >= 0::double precision)
+Foreign-key constraints:
+    "water_consumption_dishware_id_fkey" FOREIGN KEY (dishware_id) REFERENCES dishware(id) ON DELETE SET NULL
+Triggers:
+    trg_update_water_consumption BEFORE UPDATE OF portion_size, residue, vaporized ON water_consumption FOR EACH ROW EXECUTE FUNCTION update_water_consumption()
+
+### Table "public.dishware"
+Column|Type|Collation|Nullable|Default|Storage|Compression|Stats target|Description
+id|integer||not null|nextval('dishware_id_seq'::regclass)|plain|||
+dish|text||not null||extended|||
+weight|integer||||plain|||
+description|text||||extended|||
+image_url|text||||extended|||
+vapor_factor|integer||||plain|||
+Check constraints:
+    "dishware_vapor_factor_check" CHECK (vapor_factor >= 0)
+    "dishware_weight_check" CHECK (weight > 0)
+Referenced by:
+    TABLE "food_consumption" CONSTRAINT "food_consumption_dishware_id_fkey" FOREIGN KEY (dishware_id) REFERENCES dishware(id) ON DELETE SET NULL
+    TABLE "water_consumption" CONSTRAINT "water_consumption_dishware_id_fkey" FOREIGN KEY (dishware_id) REFERENCES dishware(id) ON DELETE SET NULL
+
+### Table "public.products"
+Column|Type|Collation|Nullable|Default|Storage|Compression|Stats target|Description
+id|integer||not null|nextval('products_id_seq'::regclass)|plain|||
+name|text||not null||extended|||
+calories|real||||plain|||
+protein|real||||plain|||
+fats|real||||plain|||
+ash|real||||plain|||
+fibre|real||||plain|||
+moisture|real||||plain|||
+measure|real||||plain|||
+notes|text||||extended|||
+reception|text||||extended|||
+Check constraints:
+    "products_ash_check" CHECK (ash >= 0::double precision)
+    "products_calories_check" CHECK (calories >= 0::double precision)
+    "products_fats_check" CHECK (fats >= 0::double precision)
+    "products_fibre_check" CHECK (fibre >= 0::double precision)
+    "products_measure_check" CHECK (measure > 0::double precision)
+    "products_moisture_check" CHECK (moisture >= 0::double precision)
+    "products_protein_check" CHECK (protein >= 0::double precision)
+Referenced by:
+    TABLE "food_consumption" CONSTRAINT "food_consumption_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+
+### Table "public.shit_tracker"
+Column|Type|Collation|Nullable|Default|Storage|Compression|Stats target|Description
+id|integer||not null|nextval('shit_tracker_id_seq'::regclass)|plain|||
+date|date||not null||plain|||
+notes|text||||extended|||
+
 ## API Endpoints Required
 
 ### Backend API
 - `GET /health` - Health check
-- `GET /api/data` - Fetch chart data
-- `GET /api/config` - Get chart configurations
-- `POST /api/config` - Update chart configurations
-- `POST /api/refresh` - Manual data refresh
-- `GET /api/polling/status` - Polling service status
+- `GET /api/data-sources` - Get a list of available data source identifiers and their descriptions.
+- `GET /api/data/:dataSourceId` - Fetch cached data for a specific data source.
+- `GET /api/configs` - Get all chart configurations.
+- `GET /api/configs/:id` - Get a single chart configuration.
+- `POST /api/configs` - Create a new chart configuration.
+- `PUT /api/configs/:id` - Update a chart configuration.
+- `DELETE /api/configs/:id` - Delete a chart configuration.
+- `POST /api/refresh/:dataSourceId` - Manually refresh data for a specific data source.
+- `GET /api/polling/status` - Polling service status for all data sources.
 
 ## Chart Types to Support
 
@@ -108,7 +200,7 @@ ENABLE_EDIT=true
   "id": "string",
   "type": "line|bar|pie|heatmap",
   "title": "string",
-  "dataSource": "string",
+  "dataSourceId": "string",
   "options": "object",
   "position": {
     "x": "number",

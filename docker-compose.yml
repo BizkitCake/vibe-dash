@@ -1,0 +1,30 @@
+services:
+  db_vibe:
+    image: postgres:16-alpine
+    container_name: db_vibe
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER_FILE: /run/secrets/postgres_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    volumes:
+      - ./db_vibe:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL",
+             "pg_isready -U $(cat $$POSTGRES_USER_FILE) -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    ports:
+      - 5432:5432
+    secrets:
+      - postgres_password
+      - postgres_user
+
+secrets:
+  postgres_user:
+    file: secrets/postgres_user
+  postgres_password:
+    file: secrets/postgres_password
+
